@@ -242,7 +242,7 @@ class DBController {
         unset($_SESSION[$sessionvar]);
     }
 	
-	 function GetLoginSessionVar()
+	function GetLoginSessionVar()
     {
         $retvar = md5($this->rand_key);
         $retvar = 'usr_'.substr($retvar,0,10);
@@ -250,6 +250,34 @@ class DBController {
         return $retvar;
     }
     
+	
+	function  addCampaign (  $campaignname , $tag_line ,  $description ,  $campaignimage , $campaignvidio ,  $amount ,  $days ,  $total_backers ,  $isfunded ,  $categoryid ,$company_location , $quote_input , $link , $loginid ){
+		
+		echo $query = "INSERT INTO `campaign` ( `campaignname`,`tag_line` ,`description`, `campaignimage`, `campaignvidio` , `amount`, `days`, `total_backers`, `isfunded`, `categoryid`, `company_location` , `quote_input` , `link` ,`latitude`, `longitude`, `loginid`, `u_date`) VALUES (
+					'".$campaignname."' ,
+					'".$tag_line."' ,
+					'".$description."' ,
+					'".$campaignimage."' ,
+					'".$campaignvidio."' ,
+					'".$amount."' ,
+					'".$days."' ,
+					'".$total_backers."' ,
+					'".$isfunded."' ,
+					'".$categoryid."' ,
+
+					'".$company_location."' ,
+					'".$quote_input."' ,
+					'".$link."' ,
+					'' ,
+					'' ,
+					'".$loginid."' ,
+						
+					'".date("Y-m-d H:i:s")."'
+					)";
+		
+		$sql = mysqli_query( $this->conn , $query );
+			return mysqli_insert_id( $this->conn);
+	}
 	
 
 	function getCampaign( $cat_id ){

@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 
 							$_POST['company_goal'],
-							20,
+							$_POST['no_of_days'],
 							100,
 							0,
 							$_POST['cat_id'],
@@ -427,10 +427,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 		<div class="tab-content">
 			<div id="sectionA" class="tab-pane fade in active">
 				<div style="margin-top:40px;"> <input type="text" onkeyup="companygoal();" class="getdatainput" id="company_goal"     name="company_goal"  value="" placeholder="Ex. $459 USD raised by 18 of 100 Backers"/>
+				<input id="no_of_days" type="range"  value = "1" min="1" max="30" step="1" onchange="printValue('no_of_days','no_of_days_label')" />
+				 <label id="no_of_days_label">0</label>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <label id="total_no_of_days_label">30</label>
 				</div>
+				
+				
 			</div>
 			<div id="sectionB" class="tab-pane fade">
-				<div style="margin-top:40px;"> <input type="text" onkeyup="companylocation();" class="getdatainput" id="company_location"  name="company_location" value="" placeholder="Ex. Together Hands Indianapolis, United States"/>
+				<div style="margin-top:40px;"> <input type="text" onkeyup="companylocation();" class="getdatainput" id="company_location"  name="company_location" value="" autocomplete="on" placeholder="Ex. Together Hands Indianapolis, United States"/>
 				</div>
 			</div>
 			 <div id="sectionC" class="tab-pane fade">
@@ -551,9 +555,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             </div>
         </div>
     </footer>
+	
+	<script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places" type="text/javascript"></script>
+        <script type="text/javascript">
+               function initialize() {
+                       var input = document.getElementById('company_location');
+                       var autocomplete = new google.maps.places.Autocomplete(input);
+               }
+               google.maps.event.addDomListener(window, 'load', initialize);
+       </script>
+	   
 <script>
 
-
+ function printValue(sliderID, textbox) {
+	
+        var x = document.getElementById(textbox);
+        var y = document.getElementById(sliderID);
+		 //alert(""+ y.value);
+        x.innerHTML = y.value;
+    }
 
 function readURL(input) {
     if (input.files && input.files[0]) {
@@ -642,7 +662,7 @@ function showseconddiv1()
 
 
 
-function selectCatogory(img , cat_id )
+function selectCatogory( img , cat_id )
 {
 	
 	document.getElementById("cat_id").value =cat_id;
@@ -650,7 +670,7 @@ function selectCatogory(img , cat_id )
    /* var cmname=document.getElementById("company_team_name").value;
    document.getElementById("pretittle").innerHTML=cmname; */
    
-   document.getElementById("img_cat").src=img;
+  // document.getElementById("img_cat").src=img;
    document.getElementById("category_img").src=img;
   
 }
