@@ -102,6 +102,12 @@ class DBController {
 						
 						
 				if($sql){
+					
+					
+					if(!isset($_SESSION)){ session_start(); }
+			
+			$_SESSION[$this->GetLoginSessionVar()] = $email; 
+			
 					$responce = "1";
 					
 					$_SESSION['type'] =  0 ;
@@ -124,18 +130,7 @@ class DBController {
 		
 		
 		
-		if(!isset($_SESSION)){ session_start(); }
-			
-			$_SESSION[$this->GetLoginSessionVar()] = $email;
 		
-				
-			$row = mysqli_fetch_assoc($result);
-			
-			$_SESSION['type'] =  2 ;
-			$_SESSION['user_id'] =  $fbid ;
-			$_SESSION['user_name']  = $fbfullname ;
-			$_SESSION['user_email'] = $row['email'];
-			$_SESSION['user_image'] = $fimage;
 		
 		
 		$query = "SELECT *
@@ -145,7 +140,22 @@ class DBController {
 		$result = mysqli_query( $this->conn, $query ) or die(mysqli_error($this->conn));
 		if($result && mysqli_num_rows($result) > 0)
         {
-			return "2";
+			//return "2";
+			
+			if(!isset($_SESSION)){ session_start(); }
+			
+				$_SESSION[$this->GetLoginSessionVar()] = $fbid;
+			
+					
+				$row = mysqli_fetch_assoc($result);
+				
+					$_SESSION['type'] =  1 ;
+					$_SESSION['user_id'] = $row['id'] ;
+					$_SESSION['user_name']  = $fbfullname ;
+					$_SESSION['user_email'] = "";
+					$_SESSION['user_image'] = $fimage;
+					
+			
 		}
 				
 		$sql = mysqli_query(  $this->conn , "INSERT INTO `register`( `socialid`, `name` , `profilepic`) 
@@ -158,6 +168,21 @@ class DBController {
 						
 				if($sql){
 					$responce = "1";
+					
+					if(!isset($_SESSION)){ session_start(); }
+			
+					$_SESSION[$this->GetLoginSessionVar()] = $fbid;
+			
+					
+				
+				
+					$_SESSION['type'] =  1 ;
+					$_SESSION['user_id'] = mysqli_insert_id( $this->conn) ;
+					$_SESSION['user_name']  = $fbfullname ;
+					$_SESSION['user_email'] = "";
+					$_SESSION['user_image'] = $fimage;
+					
+					
 				}
 				else{
 
@@ -229,6 +254,15 @@ class DBController {
     {
         return isset($_SESSION['type'])?$_SESSION['type']:'';
     }
+	
+	
+	
+	
+	function UserUserID()
+    {
+		
+        return isset($_SESSION['user_id'])?$_SESSION['user_id']:'';
+    }
 		
 	function UserEmail()
     {
@@ -271,7 +305,7 @@ class DBController {
 	
 	function  addCampaign (  $campaignname , $tag_line ,  $description ,  $campaignimage , $campaignvidio ,  $amount ,  $days ,  $total_backers ,  $isfunded ,  $categoryid ,$company_location , $quote_input , $link , $loginid ){
 		
-		echo $query = "INSERT INTO `campaign` ( `campaignname`,`tag_line` ,`description`, `campaignimage`, `campaignvidio` , `amount`, `days`, `total_backers`, `isfunded`, `categoryid`, `company_location` , `quote_input` , `link` ,`latitude`, `longitude`, `loginid`, `u_date`) VALUES (
+		 $query = "INSERT INTO `campaign` ( `campaignname`,`tag_line` ,`description`, `campaignimage`, `campaignvidio` , `amount`, `days`, `total_backers`, `isfunded`, `categoryid`, `company_location` , `quote_input` , `link` ,`latitude`, `longitude`, `loginid`, `u_date`) VALUES (
 					'".$campaignname."' ,
 					'".$tag_line."' ,
 					'".$description."' ,
@@ -292,6 +326,8 @@ class DBController {
 						
 					'".date("Y-m-d H:i:s")."'
 					)";
+					
+				
 		
 		$sql = mysqli_query( $this->conn , $query );
 			return mysqli_insert_id( $this->conn);
@@ -311,7 +347,9 @@ class DBController {
 				FROM `campaign` as c
 				LEFT JOIN  gifts as g  ON  g.campaignid = c.campaignid
 				where $where
-				GROUP by c.campaignid";
+				
+				GROUP by c.campaignid
+				ORDER BY c.c_date DESC ";
 				
 			$sql = mysqli_query( $this->conn, $query ) or die(mysqli_error($this->conn));
 

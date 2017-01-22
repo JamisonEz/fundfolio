@@ -317,7 +317,7 @@
 							<div id = "llocation" class="row" style="margin-left: 5%">
                                 <div class="input-field col s12">
                                     <!--<label for="password">Password</label>-->
-                                    <input placeholder="Ex. Together Hands Indianapolis, United States" name="location" id="location" type="text" class="validate">
+                                    <input placeholder="Ex. Indianapolis, United States" name="location" id="location" type="text" class="validate">
                                     <label id="location_lbl" for="location" style="font-weight: bolder; color: black;">Location</label>
                                 </div>
                             </div>

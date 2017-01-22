@@ -20,6 +20,15 @@ $_POST['company_location'],
 $_POST['quote_input'],
 $_POST['link'] */
 
+
+		if(! $db -> CheckLogin()){
+			 header("Location: http://localhost/yfcreative/Fundfolio/index.php");
+							die();
+			
+		}
+		
+		
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	
 	//echo "post work";
@@ -145,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 							$_POST['company_location'],
 							$_POST['quote_input'],
 							$_POST['link'],
-							5
+							$db ->UserUserID()
 							 );
 					if( $res > 0){
 						header("Location: http://localhost/yfcreative/Fundfolio/homescreen.php?cat_id=".$_POST['cat_id']);
@@ -156,6 +165,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 						//echo "Sucsess";
 
 		}
+		
+		
+		
 		
 
 ?>
@@ -437,7 +449,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 				</div>
 				
 				<div style="margin-top:40px;"> 
-				<input id="no_of_days" type="range"  value = "1" min="1" max="30" step="1"    />
+				<input id="no_of_days" name="no_of_days" type="range"  value = "1" min="1" max="30" step="1"    />
 				 <label id="no_of_days_label">1</label>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
 				 <label id="total_no_of_days_label"     >30</label>
 				 </div>

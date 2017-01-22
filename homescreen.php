@@ -350,6 +350,7 @@
 					
 				?>
 				
+				
 				  <!--Campaign Content 1-->
 				 <div class="col s3" style="margin-left: 0px; margin-top: 50px">
                     <a href="#">
@@ -369,17 +370,19 @@
                     <div class="progress">
                         <div class="determinate" style="width: <?php echo $percent; ?>%"></div>
                     </div>
+					
+					
                     <div class="row campaign_details" style="background-color: #F9F9F9; color: #76777B">
                         <div class="col s4">
-                            <h4><?php  echo $campaign['total_doner']; ?> of <?php  echo $campaign['total_backers']; ?></h4>
+                            <h5><?php  echo $campaign['total_doner']; ?> of <?php  echo $campaign['total_backers']; ?></h5>
                             <p>Backers</p>
                         </div>
                         <div class="col s4">
-                            <h4> <?php  echo $campaign['amount']; ?> </h4>
+                            <h5> <?php  echo $campaign['amount']; ?> </h5>
                             <p>Goal</p>
                         </div>
                         <div class="col s4">
-                            <h4> <?php  echo /* $campaign['days'] */$numberDays; ?> days</h4>
+                            <h5> <?php  echo /* $campaign['days'] */$numberDays; ?> days</h5>
                             <p>open folio</p>
                         </div>
                     </div>
