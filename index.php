@@ -34,6 +34,7 @@
 		include("functions.php");	
 		$db = new DBController();
 		
+		
 /* 		if( isset( $_POST['facebook'])){
 			echo " facebook ";
 		
@@ -90,27 +91,56 @@
 			}
 			$res = 0 ;
 			if( $_POST['btn_action'] == "register" && isset ( $_POST['lemail'] ) && isset ( $_POST['lpassword'] ) ){
-			   $res = $db -> userRegister (  $_POST['lemail'] , $_POST['lpassword'] , $image_name );
-			   if( $res == 1)
-					echo "Sucsess";
-				else  if( $res == 2)
-					echo "User already exist";
-				else 
-					echo "Error";
+			   $res = $db -> userRegister (  $_POST['lemail'] , $_POST['lpassword'] , $_POST['name'] ,$_POST['location'], $image_name );
+			   if( $res == 1){
+					//echo "Sucsess";
+					header("Location: http://localhost/yfcreative/Fundfolio/homescreen.php");
+							die();
+			   }
+				else  if( $res == 2){
+					//echo "User already exist";
+					
+					echo "<script>
+						alert('User already exist');
+						
+						</script>";
+				}
+				else{
+					//echo "Error";
+					echo "<script>
+						alert('Error');
+						
+						</script>";
+				}
 			}
 		   else{
 			 $res = $db -> login (  $_POST['lemail'] , $_POST['lpassword'] );
 			 
 			 if($res){
-				 echo "Login Successfully";
+				 
+				 header("Location: http://localhost/yfcreative/Fundfolio/homescreen.php");
+							die();
+				// echo "Login Successfully";
 			 }
 			 else
-				 echo "Your email or password or wrong";
+				 //echo "Your email or password or wrong";
+			 echo "<script>
+						alert('Your email or password or wrong');
+						
+						</script>";
 		   }
 			
 			
 			//unset($_POST);
 			
+			
+		}
+		
+		
+		if($db -> CheckLogin()){
+						
+						header("Location: http://localhost/yfcreative/Fundfolio/homescreen.php");
+							die();
 			
 		}
 		
@@ -167,10 +197,10 @@
 
 				<div id="user_lable" class="col s1 offset-s1 waves-effect" style="visibility: visible; margin-top: 45px; text-align: center; height: 35px; line-height: 35px">
 				<?php 
-				if(  $db ->  UserType() == 0){
+				/* if(  $db ->  UserType() == 0){
 					echo $db ->  UserEmail() ;
 				}
-				else if(  $db ->  UserType() == 1 ) {
+				else if(  $db ->  UserType() == 1 ) */ {
 					echo $db ->  UserName() ;
 				}
 				
@@ -254,6 +284,15 @@
                         <form class="col s12" method="post" name = "register" id = "register" action = "" enctype="multipart/form-data" style="padding: 0; margin-top: 20px">
 						
 							<input type = "hidden" " id = "btn_action" name = "btn_action"  value = "" />
+							
+							
+							<div  id = "lname" class="row" style="margin-left: 5%">
+                                <div class="input-field col s12">
+                                    <!--<label for="password">Password</label>-->
+                                    <input placeholder="Name" name="name" id="name" type ="text" class="validate">
+                                    <label id="name_lbl" for="name" style="font-weight: bolder; color: black;">Full Name</label>
+                                </div>
+                            </div>
 						
                             <div class="row" style="margin-left: 5%">
                                 <div class="input-field col s12">
@@ -262,13 +301,29 @@
                                     <!--<label for="name">Username</label>-->
                                 </div>
                             </div>
-                            <div class="row" style="margin-left: 5%">
+                            
+							
+							
+							
+							
+							<div class="row" style="margin-left: 5%">
                                 <div class="input-field col s12">
                                     <!--<label for="password">Password</label>-->
                                     <input placeholder="Password" name="lpassword" id="lpassword" type="password" class="validate">
                                     <label id="password_lbl" for="lpassword" style="font-weight: bolder; color: black;">PASSWORD</label>
                                 </div>
                             </div>
+							
+							<div id = "llocation" class="row" style="margin-left: 5%">
+                                <div class="input-field col s12">
+                                    <!--<label for="password">Password</label>-->
+                                    <input placeholder="Ex. Together Hands Indianapolis, United States" name="location" id="location" type="text" class="validate">
+                                    <label id="location_lbl" for="location" style="font-weight: bolder; color: black;">Location</label>
+                                </div>
+                            </div>
+							
+							
+							
                             <div class="row" style="margin-bottom: 30px">
                                 <div class="col s6 offset-s1" style="height: 50px; line-height: 50px; text-align: left; margin: 0 auto">
                                     <!--img id="upload_img" src="images/upload.png" height="50" width="100%" style="visibility: hidden;"-->
@@ -311,22 +366,31 @@
                         <li  <?php  if ( $cat_id == -1 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=-1">OVERVIEW</a></li>
                         <!--</div>-->
                         <!--<div class="col s1">-->
-                        <li  <?php  if ( $cat_id == 1 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=1">ARTS</a></li>
+                        <li  <?php  if ( $cat_id == 1 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=1">Business</a></li>
                         <!--</div>-->
                         <!--<div class="col s1">-->
-                        <li <?php  if ( $cat_id == 2 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=2">CHARITY</a></li>
+                        <li <?php  if ( $cat_id == 2 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=2">Travel</a></li>
                         <!--</div>-->
                         <!--<div class="col s1">-->
-                        <li <?php  if ( $cat_id == 3 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=3">DANCE</a></li>
+                        <li <?php  if ( $cat_id == 3 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=3">Sports</a></li>
                         <!--</div>-->
                         <!--<div class="col s1">-->
-                        <li <?php  if ( $cat_id == 4 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=4">PHILANTHROPY</a></li>
+                        <li <?php  if ( $cat_id == 4 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=4">Health</a></li>
                         <!--</div>-->
                         <!--<div class="col s1">-->
-                        <li <?php  if ( $cat_id == 5 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=5">SERVICE</a></li>
+                        <li <?php  if ( $cat_id == 5 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=5">Philanthropy</a></li>
                         <!--</div>-->
                         <!--<div class="col s1">-->
-                        <li <?php  if ( $cat_id == 6 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=6">TRAVEL</a></li>
+                        <li <?php  if ( $cat_id == 6 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=6">Arts</a></li>
+                        <!--</div>-->
+						  <!--<div class="col s1">-->
+                        <li <?php  if ( $cat_id == 7 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=7">Journalism</a></li>
+                        <!--</div>-->
+						  <!--<div class="col s1">-->
+                        <li <?php  if ( $cat_id == 8 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=8">Pets & Animals</a></li>
+                        <!--</div>-->
+						  <!--<div class="col s1">-->
+                        <li <?php  if ( $cat_id == 9 ) { ?> class="active" <?php  } ?> ><a href="?cat_id=9">Education</a></li>
                         <!--</div>-->
                     </ul>
                 </div>
@@ -338,12 +402,17 @@
                 <!--<a class="btn btn-lg btn-success" onclick="togglenav()" style="color: pink; font-size: 20px;"><i class="fa fa-times"></i></a>-->
                 <ul>
                     <li class="active"><a href="?cat_id =-1">OVERVIEW</a></li>
-                    <li><a href="?cat_id =1">ARTS</a></li>
-                    <li><a href="?cat_id=2">CHARITY</a></li>
-                    <li><a href="?cat_id =3">DANCE</a></li>
-                    <li><a href="?cat_id =4">PHILANTHROPY</a></li>
-                    <li><a href="?cat_id =5">SERVICE</a></li>
-                    <li><a href="?cat_id =6">TRAVEL</a></li>
+                    <li><a href="?cat_id =1">Business</a></li>
+                    <li><a href="?cat_id =2">Travel</a></li>
+                    <li><a href="?cat_id =3">Sports</a></li>
+                    <li><a href="?cat_id =4">Health</a></li>
+                    <li><a href="?cat_id =5">Philanthropy</a></li>
+                    <li><a href="?cat_id =6">Arts</a></li>
+					<li><a href="?cat_id =7">Journalism</a></li>
+                    <li><a href="?cat_id =8">Pets & Animals</a></li>
+					<li><a href="?cat_id =9">Education</a></li>
+
+
                 </ul>
             </div>
 
@@ -418,7 +487,11 @@
 				 $numberDays = $campaign['days'] - $numberDays ; 
 				 if( $numberDays < 0 )
 					 $numberDays = 0;
-				 $percent = ($campaign['total_amount']/$campaign['amount']) * 100;
+				 if( $campaign['amount'] != 0 )
+				 $percent = ( $campaign['total_amount']/$campaign['amount'] ) * 100;
+				 else {
+					 
+				 }
 				 //determinate
 				 //echo "   ". $numberDays;
 					
@@ -434,7 +507,7 @@
                                 <p><?php  echo $campaign['description']; ?></p>
                                 <div class="row">
                                     <img class="col s2" src="images/location.png" style="padding: 0; height: 30px; width: 20px;">
-                                    <h5 class="col s9">Indianapolis, IN</h5>
+                                    <h5 class="col s9"><?php  echo $campaign['company_location']; ?></h5>
                                 </div>
                             </div>
                         </div>
@@ -652,7 +725,18 @@
         </footer>
     </div>
 
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	
+ <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyCgwupCCqrpms0vsY6k4ijoVEeGgNZQnZs&language=en-AU"></script>
+        <script>
+            var autocomplete = new google.maps.places.Autocomplete($("#location")[0], {});
 
+            google.maps.event.addListener(autocomplete, 'place_changed', function() {
+                var place = autocomplete.getPlace();
+                console.log(place.address_components);
+            });
+        </script>
+		
     <script type="text/javascript">
         var btn = document.getElementById("login_btn");
         var login = document.getElementById("login_screen");
@@ -667,6 +751,10 @@
         var img = document.getElementById("upload_img");
         var forget = document.getElementById("forget_pass");
         var register_btn = document.getElementById("register_btn");
+		var lname = document.getElementById("lname");
+        var llocation = document.getElementById("llocation");
+
+		
 
         register_btn.onclick = function() {
             login.style.visibility = "visible"
@@ -681,6 +769,9 @@
             pass_label.innerHTML = "CREATE A PASSWORD";
             img.style.visibility = "visible";
             forget.style.visibility = "hidden";
+			
+			lname.style.visibility = "visible"
+			llocation.style.visibility = "visible"
         };
 
         btn.onclick = function() {
@@ -696,6 +787,9 @@
             pass_label.innerHTML = "PASSWORD";
             img.style.visibility = "hidden";
             forget.style.visibility = "visible";
+			
+			lname.style.visibility = "hidden"
+			llocation.style.visibility = "hidden"
         };
 
         llogin_btn.onclick = function() {
@@ -710,6 +804,9 @@
             pass_label.innerHTML = "PASSWORD";
             img.style.visibility = "hidden";
             forget.style.visibility = "visible";
+			
+			lname.style.visibility = "hidden"
+			llocation.style.visibility = "hidden"
         };
 
         lregister_btn.onclick = function() {
@@ -725,6 +822,9 @@
             pass_label.innerHTML = "CREATE A PASSWORD";
             img.style.visibility = "visible";
             forget.style.visibility = "hidden";
+			
+			lname.style.visibility = "visible"
+			llocation.style.visibility = "visible"
         };
     </script>
 

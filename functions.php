@@ -77,7 +77,7 @@ class DBController {
 		return true;
 	}
 
-	function userRegister ( $email , $paw , $image ){
+	function userRegister ( $email , $paw ,$name , $location , $image ){
 
 		$pwdmd5 = md5($paw);
 		
@@ -91,16 +91,24 @@ class DBController {
 			return "2";
 		}
 				
-		$sql = mysqli_query(  $this->conn , "INSERT INTO `register`( `email`, `password`, `profilepic`) 
+		$sql = mysqli_query(  $this->conn , "INSERT INTO `register`( `email` , `password` , `name`, `location` , `profilepic`) 
 						VALUES ( 						
 						'$email' ,					
-						'$pwdmd5' ,						
+						'$pwdmd5' ,	
+						'$name' ,	
+						'$location' ,							
 						'$image'
 						)");
 						
 						
 				if($sql){
 					$responce = "1";
+					
+					$_SESSION['type'] =  0 ;
+					$_SESSION['user_id'] =  mysqli_insert_id( $this->conn) ;
+					$_SESSION['user_name']  = $name ;
+					$_SESSION['user_email'] = $email;
+					$_SESSION['user_image'] = $image;
 				}
 				else{
 
@@ -127,6 +135,7 @@ class DBController {
 			$_SESSION['user_id'] =  $fbid ;
 			$_SESSION['user_name']  = $fbfullname ;
 			$_SESSION['user_email'] = $row['email'];
+			$_SESSION['user_image'] = $fimage;
 		
 		
 		$query = "SELECT *
@@ -183,6 +192,9 @@ class DBController {
 			$_SESSION['user_id'] = $row['id'];
 			$_SESSION['user_name']  = $row['name'];
 			$_SESSION['user_email'] = $row['email'];
+
+			$_SESSION['user_image'] = $row['profilepic'];
+
 			//$_SESSION['type_of_user'] = $row['type'];
 		   
 			
@@ -228,6 +240,12 @@ class DBController {
     {
         return isset($_SESSION['user_name'])?$_SESSION['user_name']:'';
     }
+	function UserImage()
+    {
+        return isset($_SESSION['user_image'])?$_SESSION['user_image']:'';
+    }
+	
+	
 	
 	
 	

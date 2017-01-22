@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 							5
 							 );
 					if( $res > 0){
-						header("Location: http://localhost/yfcreative/Fundfolio/?cat_id=".$_POST['cat_id']);
+						header("Location: http://localhost/yfcreative/Fundfolio/homescreen.php?cat_id=".$_POST['cat_id']);
 							die();
 						
 					}
@@ -176,6 +176,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+	
+	<link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+
 
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -427,14 +432,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 		<div class="tab-content">
 			<div id="sectionA" class="tab-pane fade in active">
 				<div style="margin-top:40px;"> <input type="text" onkeyup="companygoal();" class="getdatainput" id="company_goal"     name="company_goal"  value="" placeholder="Ex. $459 USD raised by 18 of 100 Backers"/>
-				<input id="no_of_days" type="range"  value = "1" min="1" max="30" step="1" onchange="printValue('no_of_days','no_of_days_label')" />
-				 <label id="no_of_days_label">0</label>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <label id="total_no_of_days_label">30</label>
+				
+				  <!--onchange="printValue('no_of_days','no_of_days_label')"-->
 				</div>
+				
+				<div style="margin-top:40px;"> 
+				<input id="no_of_days" type="range"  value = "1" min="1" max="30" step="1"    />
+				 <label id="no_of_days_label">1</label>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+				 <label id="total_no_of_days_label"     >30</label>
+				 </div>
+				 
+				 
 				
 				
 			</div>
 			<div id="sectionB" class="tab-pane fade">
-				<div style="margin-top:40px;"> <input type="text" onkeyup="companylocation();" class="getdatainput" id="company_location"  name="company_location" value="" autocomplete="on" placeholder="Ex. Together Hands Indianapolis, United States"/>
+				<div style="margin-top:40px;"> <input type="text" onkeyup="companylocation();" class="getdatainput" id="company_location"  name="company_location" value=""  placeholder="Ex. Together Hands Indianapolis, United States"/>
 				</div>
 			</div>
 			 <div id="sectionC" class="tab-pane fade">
@@ -443,11 +456,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 			</div>
 			 <div id="sectionD" class="tab-pane fade">
 				<div style="margin-top:40px;"> 
-				<input type="file" onchange="companyimage();" id="fileimage" name="fileimage" value="" />
+				<input type="file" onchange="readImgURL(this);" id="fileimage" name="fileimage" value="" />
 				</div>
 			</div>
 			 <div id="sectionE" class="tab-pane fade">
-				<div style="margin-top:40px;"> <input type="file" onkeyup="" id="filevidio" name="filevidio" value=""  />
+				<div style="margin-top:40px;"> <input type="file"  onchange="readVidioURL(this);" id="filevidio" name="filevidio" value=""  />
 				</div>
 			</div>
 			 <div id="sectionF" class="tab-pane fade">
@@ -477,7 +490,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 				<div id="mainpreviewcontainer" style="min-height: 550px; border-bottom: 30px solid #d8d8d8;background:#fff;float:left;width:86%;">  
 				
 				<div class="prevideo"   >
-				<div id="port_video_container"><embed style="height:203px;width:100%;" src=""></div> <!--http://www.youtube.com/v/XGSy3_Czz8k -->
+				<div id="port_video_container"><embed id = "port_video" style="height:203px;width:100%;" src=""></div> <!--http://www.youtube.com/v/XGSy3_Czz8k -->
+				<!--<iframe width="420" height="345" src="https://www.youtube.com/embed/XGSy3_Czz8k">
+</iframe>-->
 				<div id="prelocation"> 
 				<div class="llctionpre"><p id="locationtextpre"></p> 
 				</div></div>
@@ -556,26 +571,113 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         </div>
     </footer>
 	
-	<script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places" type="text/javascript"></script>
-        <script type="text/javascript">
-               function initialize() {
-                       var input = document.getElementById('company_location');
-                       var autocomplete = new google.maps.places.Autocomplete(input);
-               }
-               google.maps.event.addDomListener(window, 'load', initialize);
-       </script>
+	 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	
+ <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyCgwupCCqrpms0vsY6k4ijoVEeGgNZQnZs&language=en-AU"></script>
+        <script>
+            var autocomplete = new google.maps.places.Autocomplete($("#company_location")[0], {});
+
+            google.maps.event.addListener(autocomplete, 'place_changed', function() {
+                var place = autocomplete.getPlace();
+				
+				//alert ("val "+$('#company_location').val());
+				
+				document.getElementById("locationtextpre").innerHTML = $('#company_location').val();
+                console.log(place.address_components);
+            });
+        </script>
+	
 	   
 <script>
 
+
+$(function () {
+
+    // on page load, set the text of the label based the value of the range
+    //$('#no_of_days_label').text(rangeValues[$('#rangeInput').val()]);
+
+    // setup an event handler to set the text when the range value is dragged (see event for input) or changed (see event for change)
+    $('#no_of_days').on('input change', function () {
+        $('#no_of_days_label').text( $(this).val() );
+		
+		var cmdetail=document.getElementById("company_goal").value;
+		 
+		if( cmdetail != "" )
+			 cmdetail += " USD for "+ $(this).val() +" days";
+		 else 
+			  cmdetail += "0 USD for "+ $(this).val() +" days";
+   
+		document.getElementById("belowimagetextpre").innerHTML=cmdetail; 
+		
+		
+    });
+
+});
+
+
+function readVidioURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#port_video')
+                        .attr('src', e.target.result)
+                        ;
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+
+ function readImgURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#camp_img')
+                        .attr('src', e.target.result)
+						.width(120)
+                        .height(120)
+                        ;
+                };
+				/* .width(150)
+                        .height(200) */
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+
  function printValue(sliderID, textbox) {
+	 
+	
 	
         var x = document.getElementById(textbox);
         var y = document.getElementById(sliderID);
+		
+		
+		
 		 //alert(""+ y.value);
         x.innerHTML = y.value;
+		
+		
+		 var cmdetail=document.getElementById("company_goal").value;
+		 
+		if( cmdetail != "" )
+			 cmdetail += " USD for "+ y.value+" days";
+		 else 
+			  cmdetail += "0 USD for "+ y.value+" days";
+   
+		document.getElementById("belowimagetextpre").innerHTML=cmdetail; 
+		
+		
+ 
+		
+		
     }
 
-function readURL(input) {
+/* function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
 
@@ -585,7 +687,7 @@ function readURL(input) {
 
         reader.readAsDataURL(input.files[0]);
     }
-}
+} */
 
 
 
@@ -694,6 +796,15 @@ function companygoal()
   var cmvalidate=document.getElementById("company_tag_line").value;
    
    var cmdetail=document.getElementById("company_goal").value;
+   
+	var sliderVal =document.getElementById("no_of_days").value;
+		 if( cmdetail != "" )
+			 cmdetail += " USD for "+ sliderVal+" days";
+		 else 
+			  cmdetail += "0 USD for "+ sliderVal+" days";
+		 
+	
+   
    document.getElementById("belowimagetextpre").innerHTML=cmdetail; 
    
 }
